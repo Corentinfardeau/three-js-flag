@@ -1,0 +1,30 @@
+{
+    "foldersName": {
+        "entry" : "src",  
+        "build" :  "build"
+    },
+    "env": {
+        "dev": {
+            "siteURL": "",
+            "baseURL": "/",
+            "scriptURL": "/",
+            "assetsURL": "/assets/",
+            "env" : "dev"
+        },
+        "staging": {
+            "siteURL": "",
+            "baseURL": "/",
+            "scriptURL": "/",
+            "assetsURL": "/assets/",
+            "env" : "staging"
+        },
+        "live": {
+            "siteURL": "",
+            "baseURL": "/three-js-audio/",
+            "scriptURL": "/three-js-flag/",
+            "assetsURL": "/three-js-flag/assets/",
+            "env" : "live"
+        }
+    },
+    "port": 3000
+}

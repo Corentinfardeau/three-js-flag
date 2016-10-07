@@ -1,0 +1,91 @@
+<!doctype html>
+<html class="no-js" lang="">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="x-ua-compatible" content="ie=edge">
+
+        <meta property="og:description" content="" />
+        <meta property="og:image" name="thumb" content=""/>
+        <meta property="og:title" content=""/>
+        <meta property="og:type" content="" />
+        <meta property="og:url" content=""/>
+        <meta property="og:site_name" content=""/>
+        <meta name="description" content=""/>
+
+        <meta name="twitter:card" content="summary_large_image">
+        <meta name="twitter:site" content="">
+        <meta name="twitter:creator" content="">
+        <meta name="twitter:title" content="">
+        <meta name="twitter:description" content="">
+        <meta name="twitter:image:src" content="">
+
+        <title>Three.js</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+        <link href="https://fonts.googleapis.com/css?family=Lora:700|Open+Sans" rel="stylesheet">
+        <link rel="apple-touch-icon" href="apple-touch-icon.png">
+        <!-- Place favicon.ico in the root directory -->
+
+        <link rel="stylesheet" href="styles/styles.css">
+    </head>
+
+    <body class="u-fullParent">
+        
+        <div class="container u-fullParent">
+        </div>
+
+        <script id="fragmentShader" type="x-shader/x-fragment">
+            uniform float time;
+            uniform float speed;
+            uniform float offset;
+            uniform sampler2D texture1;
+            varying vec2 vUv;
+            
+            float Hash(vec2 p)
+            {
+                float h = dot(p, vec2(17.1, 311.7));
+                return -1.0 + 2.0 * fract(sin(h) * 4358.5453);
+            }
+
+            float Noise(vec2 p)
+            {
+                vec2 i = floor(p*speed);
+                vec2 f = fract(p*speed);
+                vec2 u = f * f * (3.0 - 2.0 * f);
+                
+                return mix(mix(Hash(i + vec2(0.0, 0.0)), Hash(i + vec2(1.0, 0.0)), u.x), mix(Hash(i + vec2(0.0, 1.0)), Hash(i + vec2(1.0, 1.0)), u.x), u.y); 
+             
+            }
+
+            float DistOffset(vec3 pos)
+            {
+                const float km = 0.4;
+                float offset = - km * Noise(pos.xz);
+                return offset;
+            }
+
+            void main()
+            {
+                vec2 uv = vUv.xy;
+                vec3 pos = vec3(uv.x, 1.0, uv.y);
+                float st_offset = DistOffset(pos + time);
+                st_offset = st_offset * offset;
+                gl_FragColor = 1.0 * texture2D(texture1, uv + st_offset * 0.001);
+            }
+
+        </script>
+
+        <script id="vertexShader" type="x-shader/x-vertex">
+            varying vec2 vUv;
+            uniform float time;
+
+           void main() {
+                vUv  = uv;
+                gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
+           }
+
+        </script>
+        <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/dat-gui/0.6.1/dat.gui.min.js"></script>
+        <script src="<%= scriptURL %>scripts/app.js"></script>
+    </body>
+
+</html>
